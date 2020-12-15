@@ -29,14 +29,14 @@ public class RsqlJpaSpecificationTest {
     @Test
     public void newModelA_findByModelBId() {
         ModelA savedModel = modelRepository.save(new ModelA());
-        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.id==1");
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.id==" + savedModel.getId());
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(1);
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
     }
 
     @Test
-    public void newModelA_doesNotFindByCustomStringValueWithValue() {
+    public void newModelA_findsByCustomStringValueWithValue() {
         ModelA savedModel = modelRepository.save(new ModelA());
         Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.modelC.customString.value==SOME_STRING");
         List<ModelA> foundModels = modelRepository.findAll(spec);
@@ -45,7 +45,7 @@ public class RsqlJpaSpecificationTest {
     }
 
     @Test
-    public void newModelA_doesNotFindByCustomStringValueWithoutValue() {
+    public void newModelA_findsByCustomStringValueWithoutValue() {
         ModelA savedModel = modelRepository.save(new ModelA());
         Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.modelC.customString==SOME_STRING");
         List<ModelA> foundModels = modelRepository.findAll(spec);
