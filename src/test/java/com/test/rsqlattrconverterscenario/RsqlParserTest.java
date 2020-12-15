@@ -22,7 +22,7 @@ public class RsqlParserTest {
     @Test
     public void newModelA_findByModelBId() {
         ModelA savedModel = modelRepository.save(new ModelA());
-        Node rootNode = new RSQLParser().parse("modelB.id==1");
+        Node rootNode = new RSQLParser().parse("modelB.id==" + savedModel.getId());
         Specification<ModelA> spec = rootNode.accept(new CustomRsqlVisitor<>());
         List<ModelA> foundEntities = modelRepository.findAll(spec);
         Assertions.assertThat(foundEntities.size()).isEqualTo(1);

@@ -7,4 +7,8 @@ public class CustomString extends CustomAttribute<String>{
         customString.setValue(input);
         return customString;
     }
+
+    public static CustomString valueOf(String string) {
+        return CustomString.fromString(string);
+    }
 }
