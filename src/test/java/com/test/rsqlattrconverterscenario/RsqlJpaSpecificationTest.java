@@ -1,5 +1,6 @@
 package com.test.rsqlattrconverterscenario;
 
+import com.test.rsqlattrconverterscenario.custom.StringToCustomStringConverter;
 import com.test.rsqlattrconverterscenario.data.ModelRepository;
 import com.test.rsqlattrconverterscenario.model.ModelA;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -56,6 +57,7 @@ public class RsqlJpaSpecificationTest {
     private RSQLJPASupport getRsqljpaSupport(TestEntityManager testEntityManager) {
         Map<String, EntityManager> emToEntityManager = new HashMap<>();
         emToEntityManager.put("em", testEntityManager.getEntityManager());
+        RSQLJPASupport.addConverter(new StringToCustomStringConverter());
         return new RSQLJPASupport(emToEntityManager);
     }
 }
