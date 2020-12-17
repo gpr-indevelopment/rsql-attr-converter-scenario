@@ -3,6 +3,7 @@ package com.test.rsqlattrconverterscenario;
 import com.test.rsqlattrconverterscenario.custom.StringToCustomStringConverter;
 import com.test.rsqlattrconverterscenario.data.ModelRepository;
 import com.test.rsqlattrconverterscenario.model.ModelA;
+import com.test.rsqlattrconverterscenario.model.ModelD;
 import io.github.perplexhub.rsql.RSQLJPASupport;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,18 +38,30 @@ public class RsqlJpaSpecificationTest {
     }
 
     @Test
-    public void newModelA_findsByCustomStringValueWithValue() {
+    public void newModelA_findsByCustomStringValueWithoutValue() {
         ModelA savedModel = modelRepository.save(new ModelA());
-        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.modelC.customString.value==SOME_STRING");
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.modelC.customString==SOME_STRING");
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(1);
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
     }
 
     @Test
-    public void newModelA_findsByCustomStringValueWithoutValue() {
+    public void newModelA_findsByKeyToModelDKey_find() {
         ModelA savedModel = modelRepository.save(new ModelA());
-        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("modelB.modelC.customString==SOME_STRING");
+        savedModel.getKeyToModelD().put("SOME_KEY", new ModelD());
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD==SOME_KEY");
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(1);
+        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
+    }
+
+    @Test
+    public void newModelA_findsByKeyToModelDKeyWithKeyOnQuery_find() {
+        ModelA modelA = new ModelA();
+        modelA.getKeyToModelD().put("SOME_KEY", new ModelD());
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD.id==1");
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(1);
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
