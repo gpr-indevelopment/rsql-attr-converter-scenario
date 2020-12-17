@@ -2,6 +2,7 @@ package com.test.rsqlattrconverterscenario;
 
 import com.test.rsqlattrconverterscenario.custom.StringToCustomStringConverter;
 import com.test.rsqlattrconverterscenario.data.ModelRepository;
+import com.test.rsqlattrconverterscenario.model.ImplA;
 import com.test.rsqlattrconverterscenario.model.ModelA;
 import com.test.rsqlattrconverterscenario.model.ModelD;
 import io.github.perplexhub.rsql.RSQLJPASupport;
@@ -47,16 +48,6 @@ public class RsqlJpaSpecificationTest {
     }
 
     @Test
-    public void newModelA_findsByKeyToModelDKey_find() {
-        ModelA savedModel = modelRepository.save(new ModelA());
-        savedModel.getKeyToModelD().put("SOME_KEY", new ModelD());
-        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD==SOME_KEY");
-        List<ModelA> foundModels = modelRepository.findAll(spec);
-        Assertions.assertThat(foundModels).hasSize(1);
-        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
-    }
-
-    @Test
     public void newModelA_findsByKeyToModelDWithModelDId_find() {
         ModelA modelA = new ModelA();
         modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
@@ -82,10 +73,32 @@ public class RsqlJpaSpecificationTest {
     public void newModelA_findsByKeyToModelDByKeyThatDoesntExist_findsNothing() {
         ModelA modelA = new ModelA();
         modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
-        ModelA savedModel = modelRepository.save(modelA);
+        modelRepository.save(modelA);
         Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD.key==SOME_KEY_THAT_DOES_NOT_EXIST");
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(0);
+    }
+
+    @Test
+    public void newModelA_findsByKeyToAbstractById_finds() {
+        ModelA modelA = new ModelA();
+        modelA.getKeyToAbstract().put("SOME_KEY", new ImplA(true, "SOME_PATH"));
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToAbstract.id==" + savedModel.getKeyToAbstract().get("SOME_KEY").getId());
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(1);
+        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
+    }
+
+    @Test
+    public void newModelA_findsByKeyToAbstractByImplAIsAlive_finds() {
+        ModelA modelA = new ModelA();
+        modelA.getKeyToAbstract().put("SOME_KEY", new ImplA(true, "SOME_PATH"));
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToAbstract.isAlive==true");
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(1);
+        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
     }
 
     private RSQLJPASupport getRsqljpaSupport(TestEntityManager testEntityManager) {

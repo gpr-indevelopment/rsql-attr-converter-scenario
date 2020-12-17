@@ -21,6 +21,11 @@ public class ModelA {
     @MapKey(name = "key")
     Map<String, ModelD> keyToModelD = new HashMap<>();
 
+    @JoinColumn(name = "MODEL_A_ID")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "key")
+    Map<String, Abstract> keyToAbstract = new HashMap<>();
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "MODEL_B_ID", referencedColumnName = "id")
     private final ModelB modelB = new ModelB();

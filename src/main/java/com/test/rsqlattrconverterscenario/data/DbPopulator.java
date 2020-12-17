@@ -1,5 +1,7 @@
 package com.test.rsqlattrconverterscenario.data;
 
+import com.test.rsqlattrconverterscenario.model.ImplA;
+import com.test.rsqlattrconverterscenario.model.ImplB;
 import com.test.rsqlattrconverterscenario.model.ModelA;
 import com.test.rsqlattrconverterscenario.model.ModelD;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ public class DbPopulator {
     public void populate() {
         ModelA modelA = new ModelA();
         modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
+        modelA.getKeyToAbstract().put("IMPLA", new ImplA(true, "SOME_PATH"));
+        modelA.getKeyToAbstract().put("IMPLB", new ImplB("OTHER_PATH", 2));
         modelRepository.save(modelA);
     }
 }
