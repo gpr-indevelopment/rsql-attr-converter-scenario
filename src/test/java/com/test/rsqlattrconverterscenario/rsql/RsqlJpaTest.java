@@ -1,4 +1,4 @@
-package com.test.rsqlattrconverterscenario;
+package com.test.rsqlattrconverterscenario.rsql;
 
 import com.github.tennaito.rsql.jpa.JpaCriteriaQueryVisitor;
 import com.test.rsqlattrconverterscenario.data.ModelRepository;

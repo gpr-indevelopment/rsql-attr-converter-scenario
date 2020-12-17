@@ -2,12 +2,14 @@ package com.test.rsqlattrconverterscenario.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@Audited
 public class ModelB {
 
     @Id

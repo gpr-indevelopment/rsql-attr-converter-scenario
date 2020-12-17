@@ -2,6 +2,7 @@ package com.test.rsqlattrconverterscenario.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "ImplType")
 @Getter
 @Setter
+@Audited
 public abstract class Abstract {
 
     @Id

@@ -1,4 +1,4 @@
-package com.test.rsqlattrconverterscenario;
+package com.test.rsqlattrconverterscenario.rsql;
 
 import com.test.rsqlattrconverterscenario.custom.StringToCustomStringConverter;
 import com.test.rsqlattrconverterscenario.data.ModelRepository;
@@ -90,7 +90,6 @@ public class RsqlJpaSpecificationTest {
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
     }
 
-    @Test
     public void newModelA_findsByKeyToAbstractByImplAIsAlive_finds() {
         ModelA modelA = new ModelA();
         modelA.getKeyToAbstract().put("SOME_KEY", new ImplA(true, "SOME_PATH"));
