@@ -18,7 +18,7 @@ public class ModelA {
 
     @JoinColumn(name = "MODEL_A_ID")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKey(name = "id")
+    @MapKey(name = "key")
     Map<String, ModelD> keyToModelD = new HashMap<>();
 
     @OneToOne(cascade = CascadeType.ALL)

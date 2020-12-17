@@ -16,7 +16,7 @@ public class DbPopulator {
     @PostConstruct
     public void populate() {
         ModelA modelA = new ModelA();
-        modelA.getKeyToModelD().put("SOME_KEY", new ModelD());
+        modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
         modelRepository.save(modelA);
     }
 }

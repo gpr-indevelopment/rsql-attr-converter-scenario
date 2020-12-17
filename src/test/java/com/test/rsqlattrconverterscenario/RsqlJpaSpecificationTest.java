@@ -57,14 +57,35 @@ public class RsqlJpaSpecificationTest {
     }
 
     @Test
-    public void newModelA_findsByKeyToModelDKeyWithKeyOnQuery_find() {
+    public void newModelA_findsByKeyToModelDWithModelDId_find() {
         ModelA modelA = new ModelA();
-        modelA.getKeyToModelD().put("SOME_KEY", new ModelD());
+        modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
         ModelA savedModel = modelRepository.save(modelA);
         Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD.id==1");
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(1);
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
+    }
+
+    @Test
+    public void newModelA_findsByKeyToModelDByKey_find() {
+        ModelA modelA = new ModelA();
+        modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD.key==SOME_KEY");
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(1);
+        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
+    }
+
+    @Test
+    public void newModelA_findsByKeyToModelDByKeyThatDoesntExist_findsNothing() {
+        ModelA modelA = new ModelA();
+        modelA.getKeyToModelD().put("SOME_KEY", new ModelD("SOME_KEY"));
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToModelD.key==SOME_KEY_THAT_DOES_NOT_EXIST");
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(0);
     }
 
     private RSQLJPASupport getRsqljpaSupport(TestEntityManager testEntityManager) {
