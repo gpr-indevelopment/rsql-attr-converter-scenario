@@ -5,7 +5,9 @@ import lombok.Setter;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -22,6 +24,10 @@ public class ModelA {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "key")
     Map<String, ModelD> keyToModelD = new HashMap<>();
+
+    @JoinColumn(name = "MODEL_A_ID")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Abstract> abstracts = new ArrayList<>();
 
     @JoinColumn(name = "MODEL_A_ID")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

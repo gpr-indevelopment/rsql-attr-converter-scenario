@@ -90,11 +90,23 @@ public class RsqlJpaSpecificationTest {
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
     }
 
+    @Test
     public void newModelA_findsByKeyToAbstractByImplAIsAlive_finds() {
         ModelA modelA = new ModelA();
         modelA.getKeyToAbstract().put("SOME_KEY", new ImplA(true, "SOME_PATH"));
         ModelA savedModel = modelRepository.save(modelA);
         Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("keyToAbstract.isAlive==true");
+        List<ModelA> foundModels = modelRepository.findAll(spec);
+        Assertions.assertThat(foundModels).hasSize(1);
+        Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
+    }
+
+    @Test
+    public void newModelA_findsByAbstractsPath_finds() {
+        ModelA modelA = new ModelA();
+        modelA.getAbstracts().add(new ImplA(true, "SOME_PATH"));
+        ModelA savedModel = modelRepository.save(modelA);
+        Specification<ModelA> spec = getRsqljpaSupport(testEntityManager).toSpecification("abstracts.isAlive==true");
         List<ModelA> foundModels = modelRepository.findAll(spec);
         Assertions.assertThat(foundModels).hasSize(1);
         Assertions.assertThat(foundModels.get(0)).usingRecursiveComparison().isEqualTo(savedModel);
